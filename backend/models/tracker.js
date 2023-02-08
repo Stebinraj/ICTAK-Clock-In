@@ -8,10 +8,6 @@ const trackerSchema = mongoose.Schema([{
     endTime: {
         type: Date,
         required: true
-    },
-    totalTime: {
-        type: Date,
-        required: true
     }
 }]);
 

@@ -5,28 +5,25 @@ const Start = () => {
 
     let [startTime, setStartTime] = useState('');
     let [endTime, setEndTime] = useState('');
-    let [totalTime, setTotalTime] = useState('');
     let [isStart, setIsStart] = useState(false);
 
     let startTimer = () => {
         setEndTime(null);
-        setTotalTime(null)
         setStartTime(new Date());
         setIsStart(true);
     };
 
     let endTimer = () => {
         setEndTime(new Date());
-        setTotalTime(Date(endTime - startTime));
         setIsStart(false);
     };
 
     useEffect(() => {
         let saveTimer = async () => {
-            await axios.post('http://localhost:5000/tracker', { startTime, endTime, totalTime });
+            await axios.post('http://localhost:5000/tracker', { startTime, endTime });
         };
         saveTimer();
-    }, [startTime, endTime, totalTime]);
+    }, [startTime, endTime]);
 
     return (
         <>
