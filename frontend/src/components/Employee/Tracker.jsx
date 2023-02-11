@@ -5,16 +5,17 @@ import moment from 'moment';
 const Tracker = () => {
 
     const [apiData, setApiData] = useState([]);
-
+    let empId = sessionStorage.getItem('Id');
+    
     useEffect(() => {
         const getData = async () => {
-            let response = await axios.get('http://localhost:5000/tracker');
+            let response = await axios.get(`http://localhost:5000/tracker/${empId}`);
             if (response) {
                 setApiData(response.data);
             }
         };
         getData();
-    }, []);
+    }, [empId]);
 
 
     return (
@@ -38,7 +39,7 @@ const Tracker = () => {
                                 <td>{value.project}</td>
                                 <td>{value.task}</td>
                                 <td>{value.jobDescription}</td>
-                                <td>{ value.modeOfWork}</td>
+                                <td>{value.modeOfWork}</td>
                                 <td >{moment(value.startTime).format('HH:mm:ss')}</td>
                                 <td>{moment(value.endTime).format('HH:mm:ss')}</td>
                                 <td>{moment.utc(moment(value.endTime, "HH:mm:ss").diff(moment(value.startTime, "HH:mm:ss"))).format("HH:mm:ss")}</td>

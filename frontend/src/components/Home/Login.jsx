@@ -22,7 +22,8 @@ const Login = () => {
         }
         else {
             if (response.data.role === "admin") {
-                alert("admin");
+                navigate('/admin', { replace: true });
+                alert("admin under development");
             }
         }
     }
