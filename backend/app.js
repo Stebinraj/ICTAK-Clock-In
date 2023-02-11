@@ -4,6 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 require('dotenv').config();
 const trackerRoutes = require('./routes/trackerroutes');
+const userRoutes = require('./routes/usersroute');
 
 const app = new express();
 app.use(cors());
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 
 app.use(trackerRoutes);
+app.use(userRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on the PORT ${process.env.PORT}`);
