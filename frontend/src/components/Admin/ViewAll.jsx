@@ -1,21 +1,25 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import axios from 'axios';
 
-const Tracker = () => {
+const ViewAll = () => {
 
-    const [apiData, setApiData] = useState([]);
-    let empId = sessionStorage.getItem('Id');
-    
+    const [getData, setGetData] = useState([]);
+    const [_id, setEmpId] = useState('');
+
     useEffect(() => {
-        const getData = async () => {
-            let response = await axios.get(`http://localhost:5000/tracker/${empId}`);
-            if (response) {
-                setApiData(response.data);
+        setEmpId(sessionStorage.getItem('Id'));
+
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/tracker/${_id}`);
+                setGetData(await response.data);
+            } catch (error) {
+                console.log(error.message);
             }
-        };
-        getData();
-    }, [empId]);
+        }
+        fetchData();
+    }, [_id]);
 
 
     return (
@@ -33,16 +37,16 @@ const Tracker = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {apiData.map((value, index) => {
+                    {getData.map((value, index) => {
                         return (
                             <tr key={index}>
                                 <td>{value.project}</td>
                                 <td>{value.task}</td>
                                 <td>{value.jobDescription}</td>
                                 <td>{value.modeOfWork}</td>
-                                <td >{moment(value.startTime).format('HH:mm:ss')}</td>
+                                <td>{moment(value.startTime).format('HH:mm:ss')}</td>
                                 <td>{moment(value.endTime).format('HH:mm:ss')}</td>
-                                <td>{moment.utc(moment(value.endTime, "HH:mm:ss").diff(moment(value.startTime, "HH:mm:ss"))).format("HH:mm:ss")}</td>
+                                <td>{moment.utc(moment(value.endTime).diff(moment(value.startTime))).format("HH:mm:ss")}</td>
                             </tr>
                         )
                     })}
@@ -52,4 +56,4 @@ const Tracker = () => {
     )
 }
 
-export default Tracker
+export default ViewAll

@@ -12,6 +12,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 
 app.use(trackerRoutes);
@@ -20,3 +21,7 @@ app.use(userRoutes);
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on the PORT ${process.env.PORT}`);
 });
+
+
+
+

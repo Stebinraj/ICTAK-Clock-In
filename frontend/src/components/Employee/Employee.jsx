@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import Tracker from './Tracker';
+import moment from 'moment';
 const Employee = () => {
 
-
-    let empId = sessionStorage.getItem('Id');
+    const [_id, setId] = useState('');
+    const [empId, setEmpId] = useState('');
     const [project, setProject] = useState('');
     const [task, setTask] = useState('');
     const [jobDescription, setJobDescription] = useState('');
@@ -13,6 +13,7 @@ const Employee = () => {
     const [endTime, setStopTime] = useState('');
     const [time, setTime] = useState(0);
     const [running, setRunning] = useState(false);
+    const [apiData, setApiData] = useState([]);
 
 
     const handleProject = (e) => {
@@ -33,63 +34,68 @@ const Employee = () => {
 
     // start
     const start = () => {
-        setRunning(true);
         setStartTime(new Date());
+        setRunning(true);
         setStopTime(null);
     };
 
     const stop = () => {
-        setRunning(false);
         setStopTime(new Date());
+        setRunning(false);
         setTime(0);
+        getData();
     };
 
     const pause = () => {
-        setRunning(false);
         setStopTime(new Date());
-    }
+        setRunning(false);
+        getData();
+    };
+
+    const getData = async () => {
+        try {
+            let response = await axios.get(`http://localhost:5000/tracker/${_id}`);
+            setApiData(await response.data);
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
     useEffect(() => {
+        setEmpId(sessionStorage.getItem('Id'));
+        setId(sessionStorage.getItem('Id'));
 
         let saveTimer = async () => {
-            await axios.post('http://localhost:5000/tracker', {empId,project,task,jobDescription,modeOfWork, startTime, endTime });
+            await axios.post('http://localhost:5000/tracker', { empId, project, task, jobDescription, modeOfWork, startTime, endTime });
         };
         saveTimer();
 
-        let interval=null;
+        const getData = async () => {
+            try {
+                let response = await axios.get(`http://localhost:5000/tracker/${_id}`);
+                setApiData(response.data);
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+        getData();
+
+        let interval = null;
         if (running) {
             interval = setInterval(() => {
-                setTime((prevTime) => prevTime + 1000);
+                setTime((prevTime) => prevTime + 1001);
             }, 1000);
         } else if (!running) {
             clearInterval(interval);
         }
         return () => clearInterval(interval);
 
-    }, [running,startTime,endTime,empId,project,task,jobDescription,modeOfWork]);
-
-
-    // useEffect(() => {
-    //     let post = axios.post('http://localhost:5000/employee', { _id, project, task, jobDescription, modeOfWork });
-    //     if (post) {
-    //         console.log(post);
-    //     }
-    // }, [_id,project, task, jobDescription, modeOfWork]);
-
-    // const sendData = async() => {
-    //    let post=await axios.post('http://localhost:5000/tracker', {empId, project, task, jobDescription, modeOfWork });
-    //     if (post) {
-    //         console.log(post);
-    // }
-    // }
+    }, [running, startTime, endTime, empId, project, task, jobDescription, modeOfWork, _id]);
 
     return (
         <>
-
-            {/* for project */}
-
             <div className="dropdown">
-                
+
                 <select value={project} onChange={handleProject}>
                     <option value="">Project</option>
                     <option value="Academic">Academic</option>
@@ -100,7 +106,6 @@ const Employee = () => {
                     <option value="Administration">Administration</option>
                 </select>
 
-                {/* for task */}
                 <select value={task} onChange={handleTask}>
                     <option value="">Task</option>
                     <option value="Training">Training</option>
@@ -108,77 +113,67 @@ const Employee = () => {
                     <option value="Lark Activity">Lark Activity</option>
                     <option value="Content Development">Content Development</option>
                 </select>
-                
-                {/* For job description */}
+
                 <input type="text" placeholder='Job Description' onChange={handleJobDesc} />
 
-
-                {/* for mode of work */}
                 <select value={modeOfWork} onChange={handleModeOfWork}>
                     <option value="">Mode of Work</option>
                     <option value="Work from Office">Work from Office</option>
                     <option value="Work from Home">Work from Home</option>
                 </select>
 
-            {/* <button onClick={sendData}>Send me</button> */}
-                
-
-                {/* timer */}
                 <div>
-                <span>{("0" + Math.floor((time / 3600000) % 60)).slice(-2)}:</span>
-                <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
-                <span>{("0" + Math.floor((time / 1000) % 60)).slice(-2)}</span>
-            </div>
-                
-                
-            <div>
-                {running ?
-                    (
-                        <>
-                            <button onClick={stop}>Stop</button>
-                            <button onClick={pause}>Pause</button>
-                        </>
-                    )
-                    :
-                    (
-                        <button onClick={start}>Start</button>
-                    )}
+                    <span>{("0" + Math.floor((time / 3600000) % 60)).slice(-2)}:</span>
+                    <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
+                    <span>{("0" + Math.floor((time / 1000) % 60)).slice(-2)}</span>
+                </div>
+
+                <div>
+                    {running ?
+                        (
+                            <>
+                                <button onClick={stop}>Stop</button>
+                                <button onClick={pause}>Pause</button>
+                            </>
+                        )
+                        :
+                        (
+                            <button onClick={start}>Start</button>
+                        )}
+                </div>
             </div>
 
-                {<Tracker />}
-                
-            </div>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Project</th>
+                        <th scope="col">Task</th>
+                        <th scope="col">Job Description</th>
+                        <th scope="col">Mode of Work</th>
+                        <th scope="col">Start Time</th>
+                        <th scope="col">End Time</th>
+                        <th scope="col">Total Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {apiData.map((value, index) => {
+                        return (
+                            <tr key={index}>
+                                <td>{value.project}</td>
+                                <td>{value.task}</td>
+                                <td>{value.jobDescription}</td>
+                                <td>{value.modeOfWork}</td>
+                                <td >{moment(value.startTime).format('HH:mm:ss')}</td>
+                                <td>{moment(value.endTime).format('HH:mm:ss')}</td>
+                                <td>{moment.utc(moment(value.endTime).diff(moment(value.startTime))).format("HH:mm:ss")}</td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
+
         </>
     )
 }
 
 export default Employee
-
-
-// const Employee = () => {
-//     const [selectedValue, setSelectedValue] = useState('');
-//     console.log(selectedValue);
-//     const handleChange = (e) => {
-//       setSelectedValue(e.target.value);
-//     }
-//     const handleSubmit = () => {
-//       if(selectedValue === '') {
-//         alert('Please select an option');
-//       } else {
-//         // submit the form
-//       }
-//     }
-  
-//     return (
-//       <div>
-//         <select value={selectedValue} onChange={handleChange}>
-//           <option value="">Select an Option</option>
-//           <option value="1">Option 1</option>
-//           <option value="2">Option 2</option>
-//         </select>
-//         <button onClick={handleSubmit}>Submit</button>
-//       </div>
-//     );
-//   }
-  
-//   export default Employee;

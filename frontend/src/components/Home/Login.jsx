@@ -14,7 +14,7 @@ const Login = () => {
         let response = await axios.post('http://localhost:5000/login', { empId, username, password });
         if (response.data.role === "user") {
             sessionStorage.setItem('Id', response.data._id);
-            sessionStorage.setItem('EmpId', response.data.empId);
+            sessionStorage.setItem('Name', response.data.name);
             sessionStorage.setItem('Username', response.data.username);
             sessionStorage.setItem('Role', response.data.role);
             navigate('/employee', { replace: true });
@@ -22,8 +22,12 @@ const Login = () => {
         }
         else {
             if (response.data.role === "admin") {
+                sessionStorage.setItem('adminId', response.data._id);
+                sessionStorage.setItem('Name', response.data.name);
+                sessionStorage.setItem('Username', response.data.username);
+                sessionStorage.setItem('Role', response.data.role);
                 navigate('/admin', { replace: true });
-                alert("admin under development");
+                alert("Admin Login Successfull!!!");
             }
         }
     }
