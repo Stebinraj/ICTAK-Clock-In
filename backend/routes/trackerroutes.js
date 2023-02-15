@@ -1,6 +1,8 @@
 const express = require('express');
 const trackerModel = require('../models/tracker');
 const router = express.Router();
+const moment = require('moment');
+const userModel = require('../models/users');
 
 router.post('/tracker', async (req, res) => {
     let tracker = new trackerModel(req.body);
@@ -25,29 +27,42 @@ router.get("/tracker/:_id", (req, res) => {
     })
 });
 
-// router.get('/tracker/:_id', (req, res) => {
-//     userModel.find({ "_id": req.params._id }, (err, data) => {
-//         let ObjectId = req.params._id;
-//         userModel.aggregate([
-//             { $match: { _id: ObjectId } },
-//             {
-//                 $lookup: {
-//                     from: 'trackers',
-//                     localField: '_id',
-//                     foreignField: 'empId',
-//                     as: 'works'
-//                 }
-//             },
-//             {
-//                 $unwind: '$works'
-//             }
-//         ])
-//             .then(data => {
-//                 res.send(data);
-//             })
-//     })
-// });
 
+router.get('/:_id/:range', async (req, res) => {
+    const { _id } = req.params;
+    const { range } = req.params;
+
+    let start, end;
+    switch (range) {
+        case 'daily':
+            start = moment().startOf('day');
+            end = moment(start).add(1, 'days');
+            break;
+        case 'weekly':
+            start = moment().startOf('week');
+            end = moment().endOf('week');
+            break;
+        case 'monthly':
+            start = moment().startOf('month');
+            end = moment().endOf('month');
+            break;
+        case 'yearly':
+            start = moment().startOf('year');
+            end = moment().endOf('year');
+            break;
+        default:
+            return res.status(400).json({ message: 'Invalid range' });
+    }
+
+    const data = await trackerModel.find({ empId: _id, startTime: { $gte: start, $lt: end } });
+    let total = 0;
+    data.forEach((item) => {
+        total += moment.duration(moment(item.endTime).diff(moment(item.startTime))).asHours();
+    });
+    const duration = moment.duration(total, 'hours');
+    const formattedDuration = moment.utc(duration.asMilliseconds()).format('HH:mm:ss');
+    res.json({ data, total: formattedDuration });
+});
 
 
 module.exports = router;

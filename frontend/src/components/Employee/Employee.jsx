@@ -18,18 +18,32 @@ const Employee = () => {
 
     const handleProject = (e) => {
         setProject(e.target.value);
+        setTask(null);
+        setJobDescription(null);
+        setModeOfWork(null);
+        setStartTime(null);
+        setStopTime(null);
     };
 
     const handleTask = (e) => {
         setTask(e.target.value);
+        setJobDescription(null);
+        setModeOfWork(null);
+        setStartTime(null);
+        setStopTime(null);
     };
 
     const handleJobDesc = (e) => {
         setJobDescription(e.target.value);
+        setModeOfWork(null);
+        setStartTime(null);
+        setStopTime(null);
     };
 
     const handleModeOfWork = (e) => {
         setModeOfWork(e.target.value);
+        setStartTime(null);
+        setStopTime(null);
     }
 
     // start
@@ -43,19 +57,17 @@ const Employee = () => {
         setStopTime(new Date());
         setRunning(false);
         setTime(0);
-        getData();
     };
 
     const pause = () => {
         setStopTime(new Date());
         setRunning(false);
-        getData();
     };
 
     const getData = async () => {
         try {
             let response = await axios.get(`http://localhost:5000/tracker/${_id}`);
-            setApiData(await response.data);
+            setApiData(response.data);
         } catch (error) {
             console.log(error.message);
         }
@@ -70,27 +82,20 @@ const Employee = () => {
         };
         saveTimer();
 
-        const getData = async () => {
-            try {
-                let response = await axios.get(`http://localhost:5000/tracker/${_id}`);
-                setApiData(response.data);
-            } catch (error) {
-                console.log(error.message);
-            }
-        };
+
         getData();
 
         let interval = null;
         if (running) {
             interval = setInterval(() => {
-                setTime((prevTime) => prevTime + 1001);
+                setTime((prevTime) => prevTime + 1000);
             }, 1000);
         } else if (!running) {
             clearInterval(interval);
         }
         return () => clearInterval(interval);
 
-    }, [running, startTime, endTime, empId, project, task, jobDescription, modeOfWork, _id]);
+    }, [running, empId, project, task, jobDescription, modeOfWork, startTime, endTime, _id]);
 
     return (
         <>

@@ -41,6 +41,17 @@ router.get('/users', (req, res) => {
     });
 });
 
+router.put('/users/:_id', (req, res) => {
+    userModel.findByIdAndUpdate({ _id: req.params._id }, req.body, (err, data) => {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.send(data);
+        }
+    })
+})
+
 router.delete('/delete/:_id', async (req, res) => {
     try {
         const userData = await userModel.findByIdAndDelete({ '_id': req.params._id });
@@ -51,28 +62,7 @@ router.delete('/delete/:_id', async (req, res) => {
     } catch (err) {
         res.send(err);
     }
-})
+});
 
-
-// router.get('/get/:empId', (req, res) => {
-//     let ObjectId = req.params.empId;
-//     userModel.aggregate([
-//         { $match: { _id: ObjectId } },
-//         {
-//             $lookup: {
-//                 from: 'trackers',
-//                 localField: '_id',
-//                 foreignField: 'empId',
-//                 as: 'works'
-//             }
-//         },
-//         {
-//             $unwind: '$works'
-//         }
-//     ])
-//         .then(data => {
-//             res.send(data);
-//         })
-// })
 
 module.exports = router;

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+// import UpdateTracker from './UpdateTracker';
 
 const ViewAll = () => {
 
@@ -21,12 +23,23 @@ const ViewAll = () => {
         fetchData();
     }, [_id]);
 
+    // const updateTracker = (value) => {
+    //     sessionStorage.setItem('TrackerId', value._id);
+    //     sessionStorage.setItem('TrackerProject', value.project);
+    //     sessionStorage.setItem('TrackerTask', value.task);
+    //     sessionStorage.setItem('TrackerJobDesc', value.jobDescription);
+    //     sessionStorage.setItem('TrackerModeOfWork', value.modeOfWork);
+    //     sessionStorage.setItem('TrackerStartTime', value.startTime);
+    //     sessionStorage.setItem('TrackerEndTime', value.endTime);
+    // }
+
 
     return (
-        <>
+        <>            
             <table className="table">
                 <thead>
                     <tr>
+                    <th scope="col">Date</th>
                         <th scope="col">Project</th>
                         <th scope="col">Task</th>
                         <th scope="col">Job Description</th>
@@ -34,12 +47,14 @@ const ViewAll = () => {
                         <th scope="col">Start Time</th>
                         <th scope="col">End Time</th>
                         <th scope="col">Total Time</th>
+                        {/* <th scope="col">Update</th> */}
                     </tr>
                 </thead>
                 <tbody>
                     {getData.map((value, index) => {
                         return (
                             <tr key={index}>
+                                <td>{moment(value.startTime).format('DD-MM-YYYY')}</td>
                                 <td>{value.project}</td>
                                 <td>{value.task}</td>
                                 <td>{value.jobDescription}</td>
@@ -47,6 +62,11 @@ const ViewAll = () => {
                                 <td>{moment(value.startTime).format('HH:mm:ss')}</td>
                                 <td>{moment(value.endTime).format('HH:mm:ss')}</td>
                                 <td>{moment.utc(moment(value.endTime).diff(moment(value.startTime))).format("HH:mm:ss")}</td>
+                                {/* <td>
+                                    <Link onClick={() => { updateTracker(value) }} to={'/updatetracker'} element={<UpdateTracker />}>
+                                        <button>Update</button>
+                                    </Link>
+                                </td> */}
                             </tr>
                         )
                     })}
