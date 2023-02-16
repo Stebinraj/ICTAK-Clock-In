@@ -8,6 +8,7 @@ import AddEmployee from './components/Admin/AddEmployee';
 import UpdateEmployee from './components/Admin/UpdateEmployee';
 import UpdateTracker from './components/Admin/UpdateTracker';
 import Analysis from './components/Admin/Analysis';
+import AddProject from './components/Admin/AddProject';
 
 function App() {
     return (
@@ -19,7 +20,8 @@ function App() {
             <Route path='/addemployee' element={<AddEmployee />}></Route>
             <Route path='/updateemployee' element={<UpdateEmployee />}></Route>
             <Route path='/updatetracker' element={<UpdateTracker />}></Route>
-            <Route path='/analysis' element={<Analysis/>}></Route>
+            <Route path='/analysis' element={<Analysis />}></Route>
+            <Route path='/project' element={<AddProject />}></Route>
         </Routes>
     );
 }

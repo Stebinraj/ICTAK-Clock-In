@@ -24,8 +24,8 @@ const UpdateTracker = () => {
         setEndTime(sessionStorage.getItem('TrackerEndTime'))
     }, []);
 
-    const updateTracker =  () => {
-        let updatedTracker =  axios.put(`http://localhost:5000/tracker/${_id}/${startTime}/${endTime}`, { project, task, jobDescription, modeOfWork });
+    const updateTracker = () => {
+        let updatedTracker = axios.put(`http://localhost:5000/tracker/${_id}`, { project, task, jobDescription, modeOfWork });
         if (updatedTracker) {
             alert('Update Successfully');
             navigate('/view', { replace: true });

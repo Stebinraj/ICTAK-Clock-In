@@ -8,6 +8,7 @@ const Admin = () => {
 
     const pickData = (value) => {
         sessionStorage.setItem('Id', value._id);
+        console.log(value._id);
     };
 
     useEffect(() => {
@@ -50,6 +51,10 @@ const Admin = () => {
         <>
             {/* add employee button */}
             <Link to={'/addemployee'}><button>Add Employee</button></Link>
+
+            {/* <button>Add Project</button> */}
+
+            <Link to={'/project'}><button>Add Project / Task</button></Link>
 
             <table className="table">
                 <thead>

@@ -4,72 +4,26 @@ import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-// const Analysis = () => {
-//     const [_id, setId] = useState('');
-//     const [range, setRange] = useState('daily');
-//     const [startDate, setStartDate] = useState(new Date());
-//     const [endDate, setEndDate] = useState(new Date());
-//     const [totalTime, setTotalTime] = useState(0);
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//         try {
-//             const start = moment(startDate).startOf('day').toISOString();
-//             const end = moment(endDate).endOf('day').toISOString();
-//             const res = await axios.get(`http://localhost:5000/${_id}/${range}?start=${start}&end=${end}`);
-//             setTotalTime(res.data.total);
-//         } catch (err) {
-//             console.error(err);
-//         }
-//     };
-
-//     useEffect(() => {
-//         setId(sessionStorage.getItem('analyzeId'));
-//     }, []);
-
-//     return (
-//         <div>
-//             <form onSubmit={handleSubmit}>
-//                 <label htmlFor="range">Time Range</label>
-//                 <select id="range" value={range} onChange={(e) => setRange(e.target.value)}>
-//                     <option value="daily">Daily</option>
-//                     <option value="weekly">Weekly</option>
-//                     <option value="monthly">Monthly</option>
-//                     <option value="yearly">Yearly</option>
-//                 </select>
-//                 <label htmlFor="start-date">Start Date</label>
-//                 <DatePicker id="start-date" selected={startDate} onChange={(date) => setStartDate(date)} />
-//                 <label htmlFor="end-date">End Date</label>
-//                 <DatePicker id="end-date" selected={endDate} onChange={(date) => setEndDate(date)} />
-//                 <button type="submit">Submit</button>
-//             </form>
-//             <p>Total Time Tracked: {totalTime}</p>
-//         </div>
-//     );
-// };
-
-// export default Analysis;
-
-
-
 const Analysis = () => {
-    const [reportData, setReportData] = useState(null);
-    const [_id, setId] = useState(''); // ID of the employee to retrieve data for
+    const [_id, setId] = useState('');
     const [range, setRange] = useState('daily');
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [data, setData] = useState([]);
+    const [total, setTotal] = useState('');
 
-    //   const handleEmployeeIdChange = (event) => {
-    //     setEmployeeId(event.target.value);
-    //   };
-
-    const handleRangeChange = (event) => {
-        setRange(event.target.value);
+    const fetchData = async () => {
+        const start = startDate.toISOString();
+        const end = endDate.toISOString();
+        const response = await fetch(`http://localhost:5000/${_id}/${range}/${start}/${end}`);
+        const result = await response.json();
+        setData(result.data);
+        setTotal(result.total);
     };
 
-    const handleReportSubmit = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
-        axios.get(`http://localhost:5000/${_id}/${range}`)
-            .then(response => setReportData(response.data))
-            .catch(error => console.log(error));
+        fetchData();
     };
 
     useEffect(() => {
@@ -77,41 +31,101 @@ const Analysis = () => {
     }, []);
 
     return (
-        <div>
-            <h2>Tracker Report</h2>
-            <form onSubmit={handleReportSubmit}>
-                <br />
-                <label>
-                    Range:
-                    <select value={range} onChange={handleRangeChange}>
-                        <option value="daily">Daily</option>
-                        <option value="weekly">Weekly</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="yearly">Yearly</option>
-                    </select>
-                </label>
-                <br />
-                <button type="submit">Get Report</button>
-            </form>
+        <div className="container-fluid p-0">
+            <div className="row justify-content-center">
+                <div className="col-md-12">
+                    <form className="d-flex align-items-center mb-3" onSubmit={handleSubmit}>
+                        <div className="form-group mr-3">
+                            <label htmlFor="range" className="mr-2">Range:</label>
+                            <select id="range" className="form-control" value={range} onChange={(e) => { setRange(e.target.value) }}>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                        <div className="form-group mr-3">
+                            <label htmlFor="startDate" className="mr-2">Start Date:</label>
+                            <DatePicker
+                                id="startDate"
+                                className="form-control"
+                                dateFormat="dd/MM/yyyy"
+                                selected={startDate}
+                                onChange={(date) => { setStartDate(date) }}
+                                wrapperClassName="w-100"
+                                popperPlacement="bottom-start"
+                                popperModifiers={{
+                                    preventOverflow: {
+                                        enabled: true,
+                                        escapeWithReference: false,
+                                        boundariesElement: "viewport",
+                                    },
+                                }}
+                                calendarClassName="border-0 shadow"
+                                shouldCloseOnSelect={true}
+                            />
+                        </div>
+                        <div className="form-group mr-3">
+                            <label htmlFor="endDate" className="mr-2">End Date:</label>
+                            <DatePicker
+                                id="endDate"
+                                className="form-control"
+                                dateFormat="dd/MM/yyyy"
+                                selected={endDate}
+                                onChange={(date) => { setEndDate(date) }}
+                                wrapperClassName="w-100"
+                                popperPlacement="bottom-start"
+                                popperModifiers={{
+                                    preventOverflow: {
+                                        enabled: true,
+                                        escapeWithReference: false,
+                                        boundariesElement: "viewport",
+                                    },
+                                }}
+                                calendarClassName="border-0 shadow"
+                                shouldCloseOnSelect={true}
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary mt-4">Submit</button>
+                    </form>
 
-            {reportData && (
-                <div>
-                    <h3>Total time tracked: {reportData.total}</h3>
-                    <ul>
-                        {reportData.data.map(item => (
-                            <li key={item._id}>
-                                <p>Project: {item.project}</p>
-                                <p>Task: {item.task}</p>
-                                <p>Job Description: {item.jobDescription}</p>
-                                <p>Mode of Work: {item.modeOfWork}</p>
-                                <p>Start Time: {item.startTime}</p>
-                                <p>End Time: {item.endTime}</p>
-                                <p>Duration: {moment.duration(moment(item.endTime).diff(moment(item.startTime))).asSeconds()} seconds</p>
-                            </li>
-                        ))}
-                    </ul>
+
+                    <div className="card mb-3">
+                        <div className="card-body">
+                            <h5 className="card-title">Total Hours</h5>
+                            <p className="card-text">{total}</p>
+                        </div>
+                    </div>
+                    <table className="table table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Project</th>
+                                <th>Task</th>
+                                <th>Job Description</th>
+                                <th>Mode of Work</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{moment(item.startTime).format('DD-MM-YYYY')}</td>
+                                    <td>{item.project}</td>
+                                    <td>{item.task}</td>
+                                    <td>{item.jobDescription}</td>
+                                    <td>{item.modeOfWork}</td>
+                                    <td>{moment(item.startTime).format('hh:mm:ss a')}</td>
+                                    <td>{moment(item.endTime).format('hh:mm:ss a')}</td>
+                                    <td>{moment.utc(moment(item.endTime).diff(moment(item.startTime))).format("HH:mm:ss")}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
-            )}
+            </div>
         </div>
     );
 }

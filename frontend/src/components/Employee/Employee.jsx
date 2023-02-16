@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 const Employee = () => {
 
-    const [_id, setId] = useState('');
-    const [empId, setEmpId] = useState('');
+    const _id = sessionStorage.getItem('Id');
+    const empId = sessionStorage.getItem('Id');
     const [project, setProject] = useState('');
+    const [projectData, setProjectData] = useState([]);
+    const [taskData, setTaskData] = useState([]);
     const [task, setTask] = useState('');
     const [jobDescription, setJobDescription] = useState('');
     const [modeOfWork, setModeOfWork] = useState('');
@@ -74,16 +76,25 @@ const Employee = () => {
     };
 
     useEffect(() => {
-        setEmpId(sessionStorage.getItem('Id'));
-        setId(sessionStorage.getItem('Id'));
 
         let saveTimer = async () => {
             await axios.post('http://localhost:5000/tracker', { empId, project, task, jobDescription, modeOfWork, startTime, endTime });
         };
         saveTimer();
 
-
         getData();
+
+        const getProject = async () => {
+            let project = await axios.get('http://localhost:5000/project');
+            setProjectData(project.data);
+        }
+        getProject();
+
+        const getTask = async () => {
+            let task = await axios.get('http://localhost:5000/task');
+            setTaskData(task.data);
+        }
+        getTask();
 
         let interval = null;
         if (running) {
@@ -103,20 +114,20 @@ const Employee = () => {
 
                 <select value={project} onChange={handleProject}>
                     <option value="">Project</option>
-                    <option value="Academic">Academic</option>
-                    <option value="Corporate">Corporate</option>
-                    <option value="Government">Government</option>
-                    <option value="Knowledge Office">Knowledge Office</option>
-                    <option value="Retail">Retail</option>
-                    <option value="Administration">Administration</option>
+                    {projectData.map((item, index) => {
+                        return (
+                            <option key={index} value={item.value}>{item.label}</option>
+                        )
+                    })}
                 </select>
 
                 <select value={task} onChange={handleTask}>
                     <option value="">Task</option>
-                    <option value="Training">Training</option>
-                    <option value="Meetings & Discussions">Meetings & Discussions</option>
-                    <option value="Lark Activity">Lark Activity</option>
-                    <option value="Content Development">Content Development</option>
+                    {taskData.map((item, index) => {
+                        return (
+                            <option key={index} value={item.value}>{item.label}</option>
+                        )
+                    })}
                 </select>
 
                 <input type="text" placeholder='Job Description' onChange={handleJobDesc} />
