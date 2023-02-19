@@ -62,21 +62,21 @@ router.get('/:_id/:range/:start/:end', async (req, res) => {
     res.json({ data, total: formattedDuration });
 });
 
-router.put('/tracker/:_id', async (req, res) => {
-    try {
-        let data = req.body;
-        trackerModel.findOneAndUpdate({ _id: req.params._id }, data, (err, data) => {
-            if (err) {
-                res.send(err);
-            }
-            else {
-                res.send(data);
-            }
-        });
-    } catch (err) {
-        res.send(err);
-    }
-});
+// router.put('/tracker/:_id', async (req, res) => {
+//     try {
+//         let data = req.body;
+//         trackerModel.findOneAndUpdate({ _id: req.params._id }, data, (err, data) => {
+//             if (err) {
+//                 res.send(err);
+//             }
+//             else {
+//                 res.send(data);
+//             }
+//         });
+//     } catch (err) {
+//         res.send(err);
+//     }
+// });
 
 router.put('/tracker/:_id', async (req, res) => {
     try {

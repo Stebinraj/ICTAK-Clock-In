@@ -3,6 +3,7 @@ import moment from 'moment';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import UpdateTracker from './UpdateTracker';
+import AdminNavbar from './AdminNavbar';
 
 const ViewAll = () => {
 
@@ -55,7 +56,9 @@ const ViewAll = () => {
 
     return (
         <>
-            <table className="table">
+            <AdminNavbar />
+
+            <table className="table table-striped table-hover table-responsive">
                 <thead>
                     <tr>
                         <th scope="col">Date</th>
@@ -84,11 +87,11 @@ const ViewAll = () => {
                                 <td>{moment.utc(moment(value.endTime).diff(moment(value.startTime))).format("HH:mm:ss")}</td>
                                 <td>
                                     <Link onClick={() => { updateTracker(value) }} to={'/updatetracker'} element={<UpdateTracker />}>
-                                        <button>Update</button>
+                                        <button className='btn btn-outline-success'>Update</button>
                                     </Link>
                                 </td>
                                 <td>
-                                    <button onClick={() => { deleteData(value._id) }}>Delete</button>
+                                    <button className='btn btn-outline-danger' onClick={() => { deleteData(value._id) }}>Delete</button>
                                 </td>
                             </tr>
                         )
