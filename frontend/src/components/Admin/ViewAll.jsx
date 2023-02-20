@@ -9,31 +9,33 @@ const ViewAll = () => {
 
     const [getData, setGetData] = useState([]);
     const _id = sessionStorage.getItem('Id');
-    console.log(_id)
+    let token = sessionStorage.getItem('Token');
 
     useEffect(() => {
 
+        // fetch tracker history of specific user
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/tracker/${_id}`);
+                const response = await axios.post(`http://localhost:5000/tracker/${_id}`, { token });
                 setGetData(await response.data);
             } catch (error) {
                 console.log(error.message);
             }
         }
         fetchData();
-    }, [_id]);
+    }, [_id,token]);
 
+    // store data in session for updating specific employee tracker history
     const updateTracker = (value) => {
         sessionStorage.setItem('TrackerId', value._id);
         sessionStorage.setItem('TrackerProject', value.project);
         sessionStorage.setItem('TrackerTask', value.task);
         sessionStorage.setItem('TrackerJobDesc', value.jobDescription);
         sessionStorage.setItem('TrackerModeOfWork', value.modeOfWork);
-        sessionStorage.setItem('TrackerStartTime', value.startTime);
-        sessionStorage.setItem('TrackerEndTime', value.endTime);
+        sessionStorage.setItem('TrackerToken', token);
     };
 
+    // delete specific employee tracker history
     const deleteData = (_id) => {
         let deleted = axios.delete(`http://localhost:5000/tracker/${_id}`);
         if (deleted) {
@@ -45,9 +47,10 @@ const ViewAll = () => {
         }
     };
 
+    // fetch data after deleted specific employee tracker history
     const gettData = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/tracker/${_id}`);
+            const response = await axios.post(`http://localhost:5000/tracker/${_id}`,{token});
             setGetData(await response.data);
         } catch (error) {
             console.log(error.message);
@@ -56,8 +59,10 @@ const ViewAll = () => {
 
     return (
         <>
+            {/* admin navbar */}
             <AdminNavbar />
 
+            {/* tracker history start */}
             <table className="table table-striped table-hover table-responsive">
                 <thead>
                     <tr>
@@ -98,6 +103,7 @@ const ViewAll = () => {
                     })}
                 </tbody>
             </table>
+            {/* tracker history end */}
         </>
     )
 }

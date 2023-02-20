@@ -1,28 +1,22 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Grid, Header, Segment } from 'semantic-ui-react';
 import AdminNavbar from './AdminNavbar';
 
 const UpdateEmployee = () => {
 
-    const [_id, setId] = useState('');
-    const [name, setName] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [role, setRole] = useState('');
+    const _id = sessionStorage.getItem('UpdateId');
+    const [name, setName] = useState(sessionStorage.getItem('UpdateName'));
+    const [username, setUsername] = useState(sessionStorage.getItem('UpdateUsername'));
+    const [password, setPassword] = useState(sessionStorage.getItem('UpdatePassword'));
+    const [role, setRole] = useState(sessionStorage.getItem('UpdateRole'));
+    const token = sessionStorage.getItem('UpdateToken');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        setId(sessionStorage.getItem('UpdateId'));
-        setName(sessionStorage.getItem('UpdateName'))
-        setUsername(sessionStorage.getItem('UpdateUsername'))
-        setPassword(sessionStorage.getItem('UpdatePassword'));
-        setRole(sessionStorage.getItem('UpdateRole'));
-    }, [])
-
+    // update specific employee credentials
     const updateEmployee = async () => {
-        let updated = await axios.put(`http://localhost:5000/users/${_id}`, { name, username, password, role });
+        let updated = await axios.put(`http://localhost:5000/users/${_id}`, { name, username, password, role, token });
         if (updated) {
             alert('Updated Successfull');
             navigate('/admin', { replace: true });
@@ -35,8 +29,10 @@ const UpdateEmployee = () => {
 
     return (
         <>
+            {/* admin navbar */}
             <AdminNavbar />
 
+            {/* update employee form start */}
             <Grid textAlign='center' style={{ height: '80vh', background_color: '#f0f2f5' }} verticalAlign='middle'>
                 <Grid.Column style={{ maxWidth: 450 }}>
                     <Header color='blue' textAlign='center'>
@@ -53,6 +49,7 @@ const UpdateEmployee = () => {
                     </Form>
                 </Grid.Column>
             </Grid>
+            {/* update employee form end */}
         </>
     )
 }

@@ -1,3 +1,17 @@
-.home-navbar{
+.home-navbar {
     height: 4em;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+
+thead {
+    top: 0;
+    position: sticky;
+    background-color: lightblue;
 }

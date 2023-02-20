@@ -9,6 +9,7 @@ const Employee = () => {
     // getting _id from session storage
     const _id = sessionStorage.getItem('Id');
     const empId = sessionStorage.getItem('Id');
+    const token = sessionStorage.getItem('Token');
 
     const [project, setProject] = useState('');
     const [projectData, setProjectData] = useState([]);
@@ -78,14 +79,14 @@ const Employee = () => {
 
         // save timer
         let saveTimer = async () => {
-            await axios.post('http://localhost:5000/tracker', { empId, project, task, jobDescription, modeOfWork, startTime, endTime });
+            await axios.post('http://localhost:5000/tracker', { empId, project, task, jobDescription, modeOfWork, startTime, endTime, token });
         };
         saveTimer();
 
         // fetch tracker history
         const getData = async () => {
             try {
-                let response = await axios.get(`http://localhost:5000/tracker/${_id}`);
+                let response = await axios.post(`http://localhost:5000/tracker/${_id}`, { token });
                 setApiData(response.data);
             } catch (error) {
                 console.log(error.message);
@@ -95,14 +96,14 @@ const Employee = () => {
 
         // fetch project
         const getProject = async () => {
-            let project = await axios.get('http://localhost:5000/project');
+            let project = await axios.post('http://localhost:5000/projects', { token });
             setProjectData(project.data);
         }
         getProject();
 
         // fetch task
         const getTask = async () => {
-            let task = await axios.get('http://localhost:5000/task');
+            let task = await axios.post('http://localhost:5000/tasks', { token });
             setTaskData(task.data);
         }
         getTask();
@@ -117,7 +118,7 @@ const Employee = () => {
         }
         return () => clearInterval(interval);
 
-    }, [running, empId, project, task, jobDescription, modeOfWork, startTime, endTime, _id]);
+    }, [running, empId, project, task, jobDescription, modeOfWork, startTime, endTime, _id, token]);
     // handle side effects while saving, fetching end
 
     return (
@@ -189,7 +190,7 @@ const Employee = () => {
             {/* Employee project, task, job description, mode of work, start time,end time end*/}
             <br />
             {/* Employee time tracker history start */}
-            <table className="table table-striped table-hover table-responsive">
+            <table className="table table-striped table-hover table-responsive employee-table">
                 <thead>
                     <tr>
                         <th scope="col" >Date</th>

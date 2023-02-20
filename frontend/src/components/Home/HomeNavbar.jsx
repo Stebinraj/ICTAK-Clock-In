@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 const HomeNavbar = () => {
     return (
+        // home page navbar
         <nav className="navbar bg-light fixed navbar-expand-lg home-navbar">
             <div className="container-fluid">
                 <Link to={'/'} style={{ fontWeight: "bold", fontSize: '20px' }}>

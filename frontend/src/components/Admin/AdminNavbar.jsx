@@ -17,7 +17,7 @@ const AdminNavbar = () => {
         // admin navbar start
         <nav className="navbar bg-light fixed navbar-expand-lg employee-navbar">
             <div className="container-fluid">
-                <Link to={'/employee'} style={{ fontWeight: "bold",fontSize:'20px' }}>
+                <Link to={'/admin'} style={{ fontWeight: "bold", fontSize: '20px' }}>
                     <img src={require('../../assets/logo.png')} alt="Logo" width="55" height="55" className="d-inline-block align-text-center me-1" />
                     ICTAK Clock-In
                 </Link>

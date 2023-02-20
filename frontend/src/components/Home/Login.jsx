@@ -13,26 +13,30 @@ const Login = () => {
     // login credentials check, storing sessions and redirection start
     const authenticate = async () => {
         let response = await axios.post('http://localhost:5000/login', { username, password });
-        if (response.data.role === "user") {
-            sessionStorage.setItem('Id', response.data._id);
-            sessionStorage.setItem('Name', response.data.name);
-            sessionStorage.setItem('Username', response.data.username);
-            sessionStorage.setItem('Role', response.data.role);
+        
+        if (response.data.token && response.data.user.role === "user") {
+            sessionStorage.setItem('Id', response.data.user._id);
+            sessionStorage.setItem('Name', response.data.user.name);
+            sessionStorage.setItem('Username', response.data.user.username);
+            sessionStorage.setItem('Role', response.data.user.role);
+            sessionStorage.setItem('Token', response.data.token);
             navigate('/employee', { replace: true });
             alert("Login Successfull!!!");
         }
-        else if (response.data.role === "admin") {
-            sessionStorage.setItem('adminId', response.data._id);
-            sessionStorage.setItem('Name', response.data.name);
-            sessionStorage.setItem('Username', response.data.username);
-            sessionStorage.setItem('Role', response.data.role);
+        else if (response.data.token && response.data.user.role === "admin") {
+            sessionStorage.setItem('adminId', response.data.user._id);
+            sessionStorage.setItem('Name', response.data.user.name);
+            sessionStorage.setItem('Username', response.data.user.username);
+            sessionStorage.setItem('Role', response.data.user.role);
+            sessionStorage.setItem('Token', response.data.token);
             navigate('/admin', { replace: true });
             alert("Admin Login Successfull!!!");
         }
         else {
-            alert('Invalid Credentials');
+            if (response.data === 'User does not exist' || response.data === 'Invalid Password') {
+                alert(response.data);
+            }
         }
-
     }
     // login credentials check, storing sessions and redirection end
 
@@ -40,9 +44,10 @@ const Login = () => {
         <>
             {/* Login Page Start */}
 
+            {/* navbar */}
             <HomeNavbar />
 
-            <Grid textAlign='center' style={{ height: '80vh', background_color: '#f0f2f5' }} verticalAlign='middle'>
+            <Grid textAlign='center' style={{ height: '90vh', background_color: '#f0f2f5' }} verticalAlign='middle'>
                 <Grid.Column style={{ maxWidth: 450 }}>
                     <Header color='blue' textAlign='center'>
                         <h2>Login</h2>

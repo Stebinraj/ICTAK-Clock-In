@@ -1,3 +1,4 @@
+// model for tracker
 const mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;

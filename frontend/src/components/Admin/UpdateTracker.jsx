@@ -1,31 +1,21 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Grid, Header, Segment } from 'semantic-ui-react';
 
 const UpdateTracker = () => {
 
-    const [_id, setId] = useState('');
-    const [project, setProject] = useState('');
-    const [task, setTask] = useState('');
-    const [jobDescription, setJobDesc] = useState('')
-    const [modeOfWork, setModeOfWork] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('')
+    const _id = sessionStorage.getItem('TrackerId');
+    const [project, setProject] = useState(sessionStorage.getItem('TrackerProject'));
+    const [task, setTask] = useState(sessionStorage.getItem('TrackerTask'));
+    const [jobDescription, setJobDesc] = useState(sessionStorage.getItem('TrackerJobDesc'))
+    const [modeOfWork, setModeOfWork] = useState(sessionStorage.getItem('TrackerModeOfWork'));
+    let token = sessionStorage.getItem('TrackerToken')
     const navigate = useNavigate();
 
-    useEffect(() => {
-        setId(sessionStorage.getItem('TrackerId'));
-        setProject(sessionStorage.getItem('TrackerProject'));
-        setTask(sessionStorage.getItem('TrackerTask'));
-        setJobDesc(sessionStorage.getItem('TrackerJobDesc'));
-        setModeOfWork(sessionStorage.getItem('TrackerModeOfWork'));
-        setStartTime(sessionStorage.getItem('TrackerStartTime'))
-        setEndTime(sessionStorage.getItem('TrackerEndTime'))
-    }, []);
-
+    // update specific user tracker history
     const updateTracker = () => {
-        let updatedTracker = axios.put(`http://localhost:5000/tracker/${_id}`, { project, task, jobDescription, modeOfWork });
+        let updatedTracker = axios.put(`http://localhost:5000/tracker/${_id}`, { project, task, jobDescription, modeOfWork, token });
         if (updatedTracker) {
             alert('Update Successfully');
             navigate('/view', { replace: true });
@@ -36,6 +26,7 @@ const UpdateTracker = () => {
     }
 
     return (
+        // update tracker form start
         <Grid textAlign='center' style={{ height: '100vh', background_color: '#f0f2f5' }} verticalAlign='middle'>
             <Grid.Column style={{ maxWidth: 450 }}>
                 <Header color='blue' textAlign='center'>
@@ -52,6 +43,7 @@ const UpdateTracker = () => {
                 </Form>
             </Grid.Column>
         </Grid>
+        // update tracker form end
     )
 }
 

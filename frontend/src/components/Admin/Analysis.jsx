@@ -1,41 +1,41 @@
-import { useEffect, useState } from 'react';
-// import axios from 'axios';
+import { useState } from 'react';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import AdminNavbar from './AdminNavbar';
+import axios from 'axios';
 
 const Analysis = () => {
-    const [_id, setId] = useState('');
+    const _id = sessionStorage.getItem('analyzeId');
+    const token = sessionStorage.getItem('analyzeToken');
     const [range, setRange] = useState('daily');
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [data, setData] = useState([]);
-    const [total, setTotal] = useState('');
+    // const [total, setTotal] = useState('');
 
     const fetchData = async () => {
         const start = startDate.toISOString();
         const end = endDate.toISOString();
-        const response = await fetch(`http://localhost:5000/${_id}/${range}/${start}/${end}`);
-        const result = await response.json();
+        const response = await axios.post(`http://localhost:5000/${_id}/${range}/${start}/${end}`, { token });
+        const result = await response.data;
         setData(result.data);
-        setTotal(result.total);
+        // setTotal(result.total);
     };
 
+    // fetch specific date range or daily weekly monthly yearly employee data
     const handleSubmit = (event) => {
         event.preventDefault();
         fetchData();
     };
 
-    useEffect(() => {
-        setId(sessionStorage.getItem('analyzeId'));
-    }, []);
-
     return (
         <>
+            {/* admin navbar */}
             <AdminNavbar />
             <br />
 
+            {/* specific employee analysis start */}
             <div className="container-fluid p-0">
                 <div className="row justify-content-center">
                     <div className="col-md-12">
@@ -95,12 +95,12 @@ const Analysis = () => {
                         </form>
 
 
-                        <div className="card mb-3 bg-light">
+                        {/* <div className="card mb-3 bg-light">
                             <div className="card-body">
                                 <h5 className="card-title">Total Hours : </h5>
                                 <p className="card-text">{total}</p>
                             </div>
-                        </div>
+                        </div> */}
 
                         <table className="table table-striped table-hover table-responsive mt-1">
                             <thead>
@@ -123,8 +123,8 @@ const Analysis = () => {
                                         <td>{item.task}</td>
                                         <td>{item.jobDescription}</td>
                                         <td>{item.modeOfWork}</td>
-                                        <td>{moment(item.startTime).format('hh:mm:ss a')}</td>
-                                        <td>{moment(item.endTime).format('hh:mm:ss a')}</td>
+                                        <td>{moment(item.startTime).format('HH:mm:ss')}</td>
+                                        <td>{moment(item.endTime).format('HH:mm:ss')}</td>
                                         <td>{moment.utc(moment(item.endTime).diff(moment(item.startTime))).format("HH:mm:ss")}</td>
                                     </tr>
                                 ))}
@@ -133,6 +133,7 @@ const Analysis = () => {
                     </div>
                 </div>
             </div>
+            {/* specific employee analysis start */}
         </>
     );
 }

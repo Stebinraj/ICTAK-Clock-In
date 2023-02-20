@@ -6,23 +6,23 @@ import AdminNavbar from './AdminNavbar';
 const Admin = () => {
 
     const [apiData, setApiData] = useState([]);
+    const token = sessionStorage.getItem('Token');
 
-    // for viewing specific employee
+    //store _id in sessions for viewing specific employee tracker history
     const pickData = (value) => {
         sessionStorage.setItem('Id', value._id);
-        console.log(value._id);
     };
 
     // handle side effects of fetching employees
     useEffect(() => {
         const getData = async () => {
-            let response = await axios.get('http://localhost:5000/users');
+            let response = await axios.post('http://localhost:5000/users', { token });
             setApiData(response.data);
         }
         getData();
-    }, []);
+    }, [token]);
 
-    // delete employee
+    // delete specific employee
     const onDelete = async (_id) => {
         let deletedata = await axios.delete(`http://localhost:5000/delete/${_id}`);
         if (deletedata) {
@@ -35,7 +35,7 @@ const Admin = () => {
 
     // fetch employee list after deleted specific employee
     const getData = async () => {
-        let response = await axios.get('http://localhost:5000/users');
+        let response = await axios.post('http://localhost:5000/users',{token});
         setApiData(response.data);
     }
 
@@ -46,11 +46,13 @@ const Admin = () => {
         sessionStorage.setItem('UpdateUsername', value.username);
         sessionStorage.setItem('UpdatePassword', value.password)
         sessionStorage.setItem('UpdateRole', value.role);
+        sessionStorage.setItem('UpdateToken', token);
     }
 
     // store _id in sessions for analyse a specific employee tracking history
     const analyzeData = (value) => {
         sessionStorage.setItem('analyzeId', value._id);
+        sessionStorage.setItem('analyzeToken', token);
     }
 
     return (

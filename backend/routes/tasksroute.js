@@ -1,28 +1,41 @@
 const express = require('express');
 const taskModel = require('../models/tasks');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 
+// add a task
 router.post('/task', (req, res) => {
-    let task = new taskModel(req.body);
-    task.save((err, data) => {
-        if (err) {
-            res.send(err);
-        }
-        else {
-            res.send(data);
-        }
-    })
+    let verifyToken = jwt.verify(req.body.token, process.env.JWT_TOKEN);
+    if (verifyToken) {
+        let task = new taskModel(req.body);
+        task.save((err, data) => {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                res.send(data);
+            }
+        })
+    }
 });
 
-router.get('/task', (req, res) => {
-    taskModel.find((err, data) => {
-        if (err) {
-            res.send(err);
+// read a task
+router.post('/tasks', (req, res) => {
+    try {
+        let verifyToken = jwt.verify(req.body.token, process.env.JWT_TOKEN);
+        if (verifyToken) {
+            taskModel.find((err, data) => {
+                if (err) {
+                    res.send(err);
+                }
+                else {
+                    res.send(data);
+                }
+            })
         }
-        else {
-            res.send(data);
-        }
-    })
-})
+    } catch (error) {
+        console.log(error.message);
+    }
+});
 
 module.exports = router;

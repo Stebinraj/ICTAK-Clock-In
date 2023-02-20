@@ -5,13 +5,13 @@ import AdminNavbar from './AdminNavbar';
 const AddProject = () => {
 
     const [label, setLabel] = useState('');
-    const [value, setValue] = useState('');
     const [projectData, setProjectData] = useState([]);
     const [taskData, setTaskData] = useState([]);
+    const token = sessionStorage.getItem('Token');
 
     // add project
     const sendProject = async () => {
-        let response = await axios.post('http://localhost:5000/project', { label });
+        let response = await axios.post('http://localhost:5000/project', { label, token });
         if (response) {
             alert('Added Successfull');
         } else {
@@ -21,7 +21,7 @@ const AddProject = () => {
 
     // add tasks
     const sendTask = async () => {
-        let res = await axios.post('http://localhost:5000/task', { label });
+        let res = await axios.post('http://localhost:5000/task', { label, token });
         if (res) {
             alert('Added Successfully');
         } else {
@@ -30,24 +30,28 @@ const AddProject = () => {
     };
 
     useEffect(() => {
+        // fetch project
         const getProject = async () => {
-            let project = await axios.get('http://localhost:5000/project');
+            let project = await axios.post('http://localhost:5000/projects', { token });
             setProjectData(project.data);
         }
         getProject();
 
+        // fetch task
         const getTask = async () => {
-            let task = await axios.get('http://localhost:5000/task');
+            let task = await axios.post('http://localhost:5000/tasks', { token });
             setTaskData(task.data);
         }
         getTask();
-    }, [])
+    }, [token])
 
 
     return (
         <>
+            {/* admin navbar */}
             <AdminNavbar />
 
+            {/* add project start */}
             <main className="container mt-3">
                 <div className="row">
                     <section className="col-lg-6">
@@ -86,7 +90,7 @@ const AddProject = () => {
                     </section>
                 </div>
             </main>
-
+            {/* add project end */}
         </>
     )
 }
