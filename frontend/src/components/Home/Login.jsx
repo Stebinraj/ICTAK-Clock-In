@@ -12,7 +12,7 @@ const Login = () => {
 
     // login credentials check, storing sessions and redirection start
     const authenticate = async () => {
-        let response = await axios.post('http://localhost:5000/login', { username, password });
+        let response = await axios.post('/api/login', { username, password });
         
         if (response.data.token && response.data.user.role === "user") {
             sessionStorage.setItem('Id', response.data.user._id);

@@ -79,14 +79,14 @@ const Employee = () => {
 
         // save timer
         let saveTimer = async () => {
-            await axios.post('http://localhost:5000/tracker', { empId, project, task, jobDescription, modeOfWork, startTime, endTime, token });
+            await axios.post('/api/tracker', { empId, project, task, jobDescription, modeOfWork, startTime, endTime, token });
         };
         saveTimer();
 
         // fetch tracker history
         const getData = async () => {
             try {
-                let response = await axios.post(`http://localhost:5000/tracker/${_id}`, { token });
+                let response = await axios.post(`/api/tracker/${_id}`, { token });
                 setApiData(response.data);
             } catch (error) {
                 console.log(error.message);
@@ -96,14 +96,14 @@ const Employee = () => {
 
         // fetch project
         const getProject = async () => {
-            let project = await axios.post('http://localhost:5000/projects', { token });
+            let project = await axios.post('/api/projects', { token });
             setProjectData(project.data);
         }
         getProject();
 
         // fetch task
         const getTask = async () => {
-            let task = await axios.post('http://localhost:5000/tasks', { token });
+            let task = await axios.post('/api/tasks', { token });
             setTaskData(task.data);
         }
         getTask();

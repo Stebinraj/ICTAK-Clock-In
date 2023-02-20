@@ -15,7 +15,7 @@ const UpdateTracker = () => {
 
     // update specific user tracker history
     const updateTracker = () => {
-        let updatedTracker = axios.put(`http://localhost:5000/tracker/${_id}`, { project, task, jobDescription, modeOfWork, token });
+        let updatedTracker = axios.put(`/api/tracker/${_id}`, { project, task, jobDescription, modeOfWork, token });
         if (updatedTracker) {
             alert('Update Successfully');
             navigate('/view', { replace: true });

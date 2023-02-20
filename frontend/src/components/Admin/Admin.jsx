@@ -16,7 +16,7 @@ const Admin = () => {
     // handle side effects of fetching employees
     useEffect(() => {
         const getData = async () => {
-            let response = await axios.post('http://localhost:5000/users', { token });
+            let response = await axios.post('/api/users', { token });
             setApiData(response.data);
         }
         getData();
@@ -24,7 +24,7 @@ const Admin = () => {
 
     // delete specific employee
     const onDelete = async (_id) => {
-        let deletedata = await axios.delete(`http://localhost:5000/delete/${_id}`);
+        let deletedata = await axios.delete(`/api/delete/${_id}`);
         if (deletedata) {
             getData();
         }
@@ -35,7 +35,7 @@ const Admin = () => {
 
     // fetch employee list after deleted specific employee
     const getData = async () => {
-        let response = await axios.post('http://localhost:5000/users',{token});
+        let response = await axios.post('/api/users',{token});
         setApiData(response.data);
     }
 

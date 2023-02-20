@@ -16,7 +16,7 @@ const ViewAll = () => {
         // fetch tracker history of specific user
         const fetchData = async () => {
             try {
-                const response = await axios.post(`http://localhost:5000/tracker/${_id}`, { token });
+                const response = await axios.post(`/api/tracker/${_id}`, { token });
                 setGetData(await response.data);
             } catch (error) {
                 console.log(error.message);
@@ -37,7 +37,7 @@ const ViewAll = () => {
 
     // delete specific employee tracker history
     const deleteData = (_id) => {
-        let deleted = axios.delete(`http://localhost:5000/tracker/${_id}`);
+        let deleted = axios.delete(`/api/tracker/${_id}`);
         if (deleted) {
             alert('Deleted Successfull');
             gettData();
@@ -50,7 +50,7 @@ const ViewAll = () => {
     // fetch data after deleted specific employee tracker history
     const gettData = async () => {
         try {
-            const response = await axios.post(`http://localhost:5000/tracker/${_id}`,{token});
+            const response = await axios.post(`/api/tracker/${_id}`,{token});
             setGetData(await response.data);
         } catch (error) {
             console.log(error.message);

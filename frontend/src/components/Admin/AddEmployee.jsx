@@ -14,7 +14,7 @@ const AddEmployee = () => {
 
     // creating an employee, navigation
     const addEmployee = async () => {
-        let added = await axios.post('http://localhost:5000/register', { name, username, password, role });
+        let added = await axios.post('/api/register', { name, username, password, role });
         if (added) {
             sessionStorage.setItem('Token', added.data.token);
             alert("Employee Added Successfull");

@@ -17,7 +17,7 @@ const Analysis = () => {
     const fetchData = async () => {
         const start = startDate.toISOString();
         const end = endDate.toISOString();
-        const response = await axios.post(`http://localhost:5000/${_id}/${range}/${start}/${end}`, { token });
+        const response = await axios.post(`/api/${_id}/${range}/${start}/${end}`, { token });
         const result = await response.data;
         setData(result.data);
         // setTotal(result.total);

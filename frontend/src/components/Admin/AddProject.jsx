@@ -11,7 +11,7 @@ const AddProject = () => {
 
     // add project
     const sendProject = async () => {
-        let response = await axios.post('http://localhost:5000/project', { label, token });
+        let response = await axios.post('/api/project', { label, token });
         if (response) {
             alert('Added Successfull');
         } else {
@@ -21,7 +21,7 @@ const AddProject = () => {
 
     // add tasks
     const sendTask = async () => {
-        let res = await axios.post('http://localhost:5000/task', { label, token });
+        let res = await axios.post('/api/task', { label, token });
         if (res) {
             alert('Added Successfully');
         } else {
@@ -32,14 +32,14 @@ const AddProject = () => {
     useEffect(() => {
         // fetch project
         const getProject = async () => {
-            let project = await axios.post('http://localhost:5000/projects', { token });
+            let project = await axios.post('/api/projects', { token });
             setProjectData(project.data);
         }
         getProject();
 
         // fetch task
         const getTask = async () => {
-            let task = await axios.post('http://localhost:5000/tasks', { token });
+            let task = await axios.post('/api/tasks', { token });
             setTaskData(task.data);
         }
         getTask();
