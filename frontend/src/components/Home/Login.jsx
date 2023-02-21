@@ -21,7 +21,7 @@ const Login = () => {
             sessionStorage.setItem('Role', response.data.user.role);
             sessionStorage.setItem('Token', response.data.token);
             navigate('/employee', { replace: true });
-            alert("Login Successfull!!!");
+            alert("Login Successful !!!");
         }
         else if (response.data.token && response.data.user.role === "admin") {
             sessionStorage.setItem('adminId', response.data.user._id);
@@ -30,7 +30,7 @@ const Login = () => {
             sessionStorage.setItem('Role', response.data.user.role);
             sessionStorage.setItem('Token', response.data.token);
             navigate('/admin', { replace: true });
-            alert("Admin Login Successfull!!!");
+            alert("Admin Login Successful !!!");
         }
         else {
             if (response.data === 'User does not exist' || response.data === 'Invalid Password') {

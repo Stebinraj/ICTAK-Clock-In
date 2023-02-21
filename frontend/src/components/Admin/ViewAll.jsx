@@ -23,7 +23,7 @@ const ViewAll = () => {
             }
         }
         fetchData();
-    }, [_id,token]);
+    }, [_id, token]);
 
     // store data in session for updating specific employee tracker history
     const updateTracker = (value) => {
@@ -39,7 +39,7 @@ const ViewAll = () => {
     const deleteData = (_id) => {
         let deleted = axios.delete(`/api/tracker/${_id}`);
         if (deleted) {
-            alert('Deleted Successfull');
+            alert('Deleted Successfully');
             gettData();
         }
         else {
@@ -50,7 +50,7 @@ const ViewAll = () => {
     // fetch data after deleted specific employee tracker history
     const gettData = async () => {
         try {
-            const response = await axios.post(`/api/tracker/${_id}`,{token});
+            const response = await axios.post(`/api/tracker/${_id}`, { token });
             setGetData(await response.data);
         } catch (error) {
             console.log(error.message);

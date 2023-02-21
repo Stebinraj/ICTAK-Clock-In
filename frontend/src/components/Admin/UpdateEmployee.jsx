@@ -18,7 +18,7 @@ const UpdateEmployee = () => {
     const updateEmployee = async () => {
         let updated = await axios.put(`/api/users/${_id}`, { name, username, password, role, token });
         if (updated) {
-            alert('Updated Successfull');
+            alert('Updated Successfully');
             navigate('/admin', { replace: true });
         }
         else {

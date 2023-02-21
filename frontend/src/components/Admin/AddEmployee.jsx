@@ -15,13 +15,15 @@ const AddEmployee = () => {
     // creating an employee, navigation
     const addEmployee = async () => {
         let added = await axios.post('/api/register', { name, username, password, role });
-        if (added) {
+        if (added.data.token) {
             sessionStorage.setItem('Token', added.data.token);
-            alert("Employee Added Successfull");
+            alert("Employee Added Successfully");
             navigate('/admin', { replace: true });
+        } else if (added.data === 'User already exists !!!') {
+            alert(added.data);
         }
         else {
-            alert('Employee Cannot Added');
+            alert('Employee Cannot be Added');
         }
     };
 

@@ -31,7 +31,7 @@ router.post('/api/register', async (req, res) => {
         // Check if user already exists
         const existingUser = await userModel.findOne({ username: req.body.username });
         if (existingUser) {
-            return res.send('User already exists!!!');
+            return res.send('User already exists !!!');
         }
         else {
             // Create new user

@@ -11,21 +11,32 @@ const AddProject = () => {
 
     // add project
     const sendProject = async () => {
-        let response = await axios.post('/api/project', { label, token });
-        if (response) {
-            alert('Added Successfull');
-        } else {
-            alert('Unsuccessfull')
+        if (label === '') {
+            alert('Project Empty');
         }
+        else {
+            let response = await axios.post('/api/project', { label, token });
+            if (response.data) {
+                alert('Project Added Successfully');
+            } else {
+                alert('Unsuccessful')
+            }
+        }
+
     };
 
     // add tasks
     const sendTask = async () => {
-        let res = await axios.post('/api/task', { label, token });
-        if (res) {
-            alert('Added Successfully');
-        } else {
-            alert('Unsuccessfull')
+        if (label === '') {
+            alert('Task Empty');
+        }
+        else {
+            let res = await axios.post('/api/task', { label, token });
+            if (res.data) {
+                alert('Task Added Successfully');
+            } else {
+                alert('Unsuccessful')
+            }
         }
     };
 

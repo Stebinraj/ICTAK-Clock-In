@@ -26,6 +26,7 @@ const Admin = () => {
     const onDelete = async (_id) => {
         let deletedata = await axios.delete(`/api/delete/${_id}`);
         if (deletedata) {
+            alert('Deleted Successfully')
             getData();
         }
         else {
@@ -35,7 +36,7 @@ const Admin = () => {
 
     // fetch employee list after deleted specific employee
     const getData = async () => {
-        let response = await axios.post('/api/users',{token});
+        let response = await axios.post('/api/users', { token });
         setApiData(response.data);
     }
 
